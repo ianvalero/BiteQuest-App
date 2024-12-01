@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% block extra_head %}{% endblock %}
+{% endblock %}
+{% block navbar %}
+<nav>
+    <div class="logo"><a href="{% url 'restaurants:restaurant_list' %}"><img src="{% static 'images/logo.png' %}" ></a></div>
+    <ul class="nav-links">
+      <li><a class="selected" href="{% url 'restaurants:restaurant_list' %}">Restaurants</a></li>
+      <li><a href="#">Gourmet Roulette</a></li>
+    </ul>
+    <ul>
+        <li><a class="login" href="">Login</a></li>
+    </ul>
+  </div>
+</nav>
+{% endblock %}

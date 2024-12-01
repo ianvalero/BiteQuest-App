@@ -1,0 +1,71 @@
+/* CATEGORIES */
+#categories_filter {
+    display: flex;
+    justify-content: space-evenly;
+    padding: 3rem;
+    background-color: #7d7abc;
+}
+
+#categories_filter button {
+    border-radius: 50%;
+    background-color: #FFD97D;
+    padding: 0.7rem;
+    border: 2px solid #FEFEFA;
+    box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+#categories_filter img {
+    width: 40px;
+    height:40px;
+}
+
+/* SEARCH */
+
+#search_section {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1rem;
+    background-color: #7d7abc;
+}
+
+#search_form {
+    margin-left: 4rem;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    display: flex;
+}
+
+#search_form > input {
+  border: 0;
+  color: #7d7abc;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+#search_form > input:focus{
+    outline: none;
+}
+
+#search_form > label {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+
+/* FILTER BUTTONS */
+
+#search_form > button {
+    background: none;
+    border: 0;
+    color: #7d7abc;
+    padding: 0 1rem;
+    font-weight: bold;
+}

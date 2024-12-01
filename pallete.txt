@@ -1,0 +1,8 @@
+Rojo fuerte --> #EE6055
+Verde fuerte --> #60D394
+Verde claro --> #AAF683 -------------> #ffe347
+Amarillo claro --> #FFD97D ----------> #7d7abc
+Rojo claro --> #FF9B85
+
+
+
