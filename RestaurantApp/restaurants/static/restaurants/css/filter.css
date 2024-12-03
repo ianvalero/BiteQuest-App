@@ -1,4 +1,18 @@
 /* CATEGORIES */
+
+.disabled {
+    background-color: #919191;
+}
+
+.disabled img {
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+}
+
+.enabled {
+    background-color: #FFD97D;
+}
+
 #categories_filter {
     display: flex;
     justify-content: space-evenly;
@@ -8,7 +22,6 @@
 
 #categories_filter button {
     border-radius: 50%;
-    background-color: #FFD97D;
     padding: 0.7rem;
     border: 2px solid #FEFEFA;
     box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
