@@ -4,17 +4,43 @@ from django.views import View
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.utils.text import slugify
+from django.db.models import Q
 from .models import Restaurant, Category
 from .forms import RestaurantForm
 
 class RestaurantListView(ListView):
     model = Restaurant
+    template_name = 'restaurants/restaurant_list.html'
 
-    def get_context_data(self):
+    # def get_context_data(self):
+    #     categories_list = Category.objects.all()
+    #     restaurant_list = Restaurant.objects.all()
+    #     context = {'categories_list': categories_list, 'restaurant_list': restaurant_list}
+    #     return context
+
+    def get(self, request):
         categories_list = Category.objects.all()
         restaurant_list = Restaurant.objects.all()
         context = {'categories_list': categories_list, 'restaurant_list': restaurant_list}
-        return context
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        excluded_categories = request.POST.get('disabled_categories', False)
+        search = request.POST.get('search', False)
+        categories_list = Category.objects.all()
+        if not excluded_categories and not search:
+            restaurant_list = Restaurant.objects.all()
+        else:
+            restaurant_list = Restaurant.objects
+            if excluded_categories:
+                excluded_categories = list(excluded_categories.split(","))
+                restaurant_list = restaurant_list.exclude(category__pk__in=excluded_categories)
+            if search:
+                query = Q(name__icontains=search)
+                query.add(Q(description__icontains=search), Q.OR)
+                restaurant_list = restaurant_list.filter(query).select_related().distinct()
+        context = {'categories_list': categories_list, 'restaurant_list': restaurant_list}
+        return render(request, self.template_name, context)
 
 
 # class RestaurantCreateView(LoginRequiredMixin):

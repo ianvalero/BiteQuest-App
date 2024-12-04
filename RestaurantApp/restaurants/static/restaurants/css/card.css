@@ -75,6 +75,7 @@ h5 {
 
 .card-content {
   width: 100%;
+  height: 45%;
   text-align: center;
   background-color: #FFD97D;
   padding: 0 60px 50px;
@@ -99,10 +100,12 @@ h5 {
 .card-title {
   font-size: 1.5rem;
   margin-bottom: 1em;
+  text-align: center;
 }
 
 .card-text {
   font-size: 0.75rem;
+  text-align: center;
 }
 
 .card-image {
@@ -111,5 +114,3 @@ h5 {
   object-fit: cover;
   object-position: center;
 }
-
-
