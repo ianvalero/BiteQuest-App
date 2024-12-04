@@ -12,12 +12,6 @@ class RestaurantListView(ListView):
     model = Restaurant
     template_name = 'restaurants/restaurant_list.html'
 
-    # def get_context_data(self):
-    #     categories_list = Category.objects.all()
-    #     restaurant_list = Restaurant.objects.all()
-    #     context = {'categories_list': categories_list, 'restaurant_list': restaurant_list}
-    #     return context
-
     def get(self, request):
         categories_list = Category.objects.all()
         restaurant_list = Restaurant.objects.all()
@@ -25,21 +19,26 @@ class RestaurantListView(ListView):
         return render(request, self.template_name, context)
 
     def post(self, request):
-        excluded_categories = request.POST.get('disabled_categories', False)
+        disabled_categories = request.POST.get('disabled_categories', False)
         search = request.POST.get('search', False)
         categories_list = Category.objects.all()
-        if not excluded_categories and not search:
+        if not disabled_categories and not search:
             restaurant_list = Restaurant.objects.all()
         else:
             restaurant_list = Restaurant.objects
-            if excluded_categories:
-                excluded_categories = list(excluded_categories.split(","))
+            if disabled_categories:
+                excluded_categories = list(disabled_categories.split(","))
                 restaurant_list = restaurant_list.exclude(category__pk__in=excluded_categories)
             if search:
                 query = Q(name__icontains=search)
                 query.add(Q(description__icontains=search), Q.OR)
                 restaurant_list = restaurant_list.filter(query).select_related().distinct()
-        context = {'categories_list': categories_list, 'restaurant_list': restaurant_list}
+        context = {
+            'categories_list': categories_list,
+            'restaurant_list': restaurant_list,
+            'search': search,
+            'disabled_categories': [] if not disabled_categories else list(map(int, disabled_categories.split(",")))
+        }
         return render(request, self.template_name, context)
 
 

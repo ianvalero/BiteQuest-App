@@ -10,7 +10,9 @@
     <section id="categories_filter">
     {% for category in categories_list %}
         <span>
-            <button class="enabled" type="button" data-category="{{ category.id }}">
+            <button type="button" data-category="{{ category.id }}"
+                {% if category.id in disabled_categories %} class="disabled" {% else %} class="enabled" {% endif %}
+            >
                 <img src="{{ category.icon.url }}" alt="{{ category.name }} icon">
             </button>
         </span>
@@ -20,8 +22,10 @@
         <form method="POST" action="{% url 'restaurants:restaurant_list' %}" role="search" id="search_form">
             {% csrf_token %}
             <label for="search">Search</label>
-            <input id="search" name="search" type="search" placeholder="Search restaurant" autofocus/>
-            <input type="hidden" name="disabled_categories" id="disabled_categories" />
+            <input id="search" name="search" type="search" placeholder="Search restaurant"
+                   {% if search %} value="{{ search }}" {% endif %}/>
+            <input type="hidden" name="disabled_categories" id="disabled_categories"
+                   value="{{ disabled_categories|join:',' }}" />
             <button type="submit">Apply</button>
             <button type="button" id="reset_filters">Reset</button>
         </form>
