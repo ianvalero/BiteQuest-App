@@ -5,7 +5,8 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('restaurants.urls'))
+    path('', include('restaurants.urls')),
+    path('accounts/', include("django.contrib.auth.urls"))
 ]
 
 # Configuración para servir archivos multimedia en desarrollo

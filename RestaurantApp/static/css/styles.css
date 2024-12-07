@@ -26,6 +26,10 @@ nav li > a {
     color: #ffe347;
 }
 
+nav li > a:hover {
+    color: #ffe347;
+}
+
 nav li > .selected {
     border-bottom: 2px solid #ffe347;
 }

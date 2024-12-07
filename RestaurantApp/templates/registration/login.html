@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+{% block content %}
+<section id="main-image">
+  <img src="{% static 'images/login/login5.svg' %}">
+</section>
+<section id="login-form">
+  <div>
+    <h2>LOGIN</h2>
+    <form method="post">
+      {% csrf_token %}
+      <i class="fa-solid fa-user"></i>
+      <input type="text" name="username" placeholder="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
+      <i class="fa-solid fa-key"></i>
+
+      <input type="password" name="password" placeholder="password" autocomplete="current-password" required="" id="id_password">
+<!--    {{ form }}-->
+      <button type="submit">Log In</button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}
