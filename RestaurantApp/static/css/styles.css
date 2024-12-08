@@ -55,6 +55,10 @@ nav .login {
     padding: 5px 1vw;
 }
 
+nav .login:hover {
+    color: #7d7abc;
+}
+
 nav .logo img {
     width: 115px;
 }

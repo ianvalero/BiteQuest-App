@@ -12,6 +12,7 @@ body {
     justify-content: space-around;
     width: 100vw;
     height: 100vh;
+    position: relative;
 }
 
 section {
@@ -26,44 +27,55 @@ section {
     height: 30rem;
 }
 
-#login-form {
+#login-section {
     flex-direction: column;
-    background-color: #7d7abc;
+    position: relative;
 }
 
-#login-form  form {
+#login-section  form {
     display: flex;
     flex-direction: column;
     height: 10rem;
     justify-content: space-around;
 }
 
-#login-form div {
+#login-section > #login-card {
     padding: 2rem;
     background-color: #fff;
     border-radius: .5rem;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
     width: 20rem;
     padding-bottom: 1.5rem;
+    z-index: 10;
 }
 
-#login-form  h2 {
+#login-section  h2 {
     font-family: "Poppins", sans-serif;
     letter-spacing: 12px;
     text-align: center;
 }
 
-#login-form input {
+#login-section input {
     outline: 0;
     border-width: 0 0 2px;
     border-color: black;
+    margin-left: 5px;
 }
 
-#login-form button {
+#login-section button {
     background-color: #ffe347;
     border: 0;
     border-radius: .5rem;
     color: #7d7abc;
     padding: .5rem;
     font-weight: bold;
+}
+
+#wave {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: -1;
 }

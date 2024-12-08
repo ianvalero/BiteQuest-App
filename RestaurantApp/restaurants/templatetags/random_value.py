@@ -4,5 +4,5 @@ import random
 register = template.Library()
 
 @register.filter
-def random_number():
-    return random.randint(1,7)
+def random_image(path):
+    return f"{path}/login{random.randint(1,6)}.svg"
