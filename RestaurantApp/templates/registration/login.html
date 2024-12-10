@@ -12,16 +12,19 @@
 <section id="login-section">
   <div id="login-card">
     <h2>LOGIN</h2>
-    <form method="post">
+    <form method="post" action="{% url 'login' %}">
       {% csrf_token %}
-      <div>
+      <div class="form-input">
         <i class="fa-solid fa-user"></i>
         <input type="text" name="username" placeholder="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username">
       </div>
-      <div>
+      <div class="form-input">
         <i class="fa-solid fa-key"></i>
         <input type="password" name="password" placeholder="password" autocomplete="current-password" required="" id="id_password">
       </div>
+      {% if form.errors %}
+        <p><i class="fa-solid fa-circle-exclamation"></i>     Your username and password didn't match.</p>
+      {% endif %}
       <button type="submit">Log In</button>
     </form>
   </div>

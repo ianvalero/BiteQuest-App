@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
 
     'restaurants.apps.RestaurantsConfig',
+    'core.apps.CoreConfig'
 ]
 
 # Crispy bootstrap5 vars
@@ -127,6 +128,10 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+#Login/logout redirect
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = "/"
 
 #Media files
 MEDIA_URL = '/media/'
