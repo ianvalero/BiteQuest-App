@@ -6,7 +6,7 @@ class RestaurantForm(forms.ModelForm):
     class Meta:
         model = Restaurant
         fields = ["name", "description", "category", "address", "phone_number",
-                  "link", "image"]
+                  "link"]
         labels = {
             "phone_number": _("Phone number")
         }

@@ -1,5 +1,4 @@
 document.querySelectorAll("#categories_filter button").forEach(button => {
-    console.log(button.dataset);
     button.addEventListener("click", () => {
         // Alterna entre 'enabled' y 'disabled'
         button.classList.toggle("enabled");

@@ -2,9 +2,8 @@ from django.conf import settings
 from django.core.validators import MinValueValidator, MaxValueValidator, MinLengthValidator
 from django.db import models
 from django.db.models import UniqueConstraint
-from .validators import validate_icon
+from .validators import *
 
-# Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
     icon = models.FileField(upload_to='category_icons/', validators=[validate_icon])
@@ -14,6 +13,20 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+def category_image_path(instance, filename):
+    return f'category_images/{instance.category.id}/{filename}'
+
+class CategoryImage(models.Model):
+    category = models.ForeignKey(Category, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to=category_image_path)
+
+    def __str__(self):
+        return f'{self.category.name} image'
 
 class Restaurant(models.Model):
     name = models.CharField(max_length=100)
