@@ -69,7 +69,7 @@ class RestaurantCreateView(View):
         print(form.cleaned_data['category'].id)
         category_images_dir = os.path.join(settings.BASE_DIR, 'media', 'category_images', str(form.cleaned_data['category'].id))
         restaurant = form.save(False)
-        restaurant.image = f'category_images/{str(form.cleaned_data['category'].id)}/{random.choice(os.listdir(category_images_dir))}'
+        restaurant.image = f"category_images/{str(form.cleaned_data['category'].id)}/{random.choice(os.listdir(category_images_dir))}"
         restaurant.owner = self.request.user
         restaurant.slug = slugify(form.cleaned_data['name'])
         restaurant.save()
@@ -93,3 +93,9 @@ class RestaurantDeleteView(View):
     def get(self, request):
         form = RestaurantForm()
         return render(request, self.template, {'form': form})
+
+class RestaurantFavoriteView(View):
+    pass
+
+class RestaurantUnfavoriteView(View):
+    pass

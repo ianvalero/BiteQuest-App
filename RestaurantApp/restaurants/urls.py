@@ -15,4 +15,6 @@ urlpatterns = [
     path('restaurant/<slug:slug>/delete',
          views.RestaurantDeleteView.as_view(success_url=reverse_lazy('restaurant_list')),
          name='restaurant_delete'),
+    path('restaurant/<int:pk>/favorite', views.RestaurantFavoriteView.as_view(), name='restaurant_favorite'),
+    path('restaurant/<int:pk>/unfavorite', views.RestaurantUnfavoriteView.as_view(), name='restaurant_unfavorite'),
 ]

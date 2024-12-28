@@ -11,8 +11,18 @@
       <li><a class="selected" href="{% url 'restaurants:restaurant_list' %}">Restaurants</a></li>
       <li><a href="#">Gourmet Roulette</a></li>
     </ul>
-    <ul>
-        <li><a class="login" href="{% url 'login' %}">Login</a></li>
+    <ul class="nav-user">
+        {% if user.is_authenticated %}
+            <li id="user">{{ user.username }}</a></li>
+            <li>
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button class="login" type="submit">Log Out</button>
+                </form>
+            </li>
+        {% else %}
+            <li><a class="login" href="{% url 'login' %}">Login</a></li>
+        {% endif %}
     </ul>
   </div>
 </nav>

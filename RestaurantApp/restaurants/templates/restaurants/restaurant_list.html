@@ -38,8 +38,19 @@
 <section id="restaurants_list" class="container">
     {% for restaurant in restaurant_list %}
         <div class="card">
-            <!--        <i class="favorite fa-regular fa-star"></i>-->
-            <i class="favorite fa-solid fa-star fa-bounce"></i>
+            {% if user.is_authenticated %}
+                <i
+                {% if restaurant.id in favorites %}
+                    class="favorite fa-solid fa-star fa-bounce"
+                    onclick="favRestaurant('{% url 'restaurants:restaurant_unfavorite' restaurant.id %}', {{ restaurant.id }});return false;"
+                    id="favorite_star_{{ restaurant.id }}"
+                {% else %}
+                    class="favorite fa-regular fa-star"
+                    onclick="favRestaurant('{% url 'restaurants:restaurant_favorite' restaurant.id %}', {{ restaurant.id }});return false;"
+                    id="unfavorite_star_{{ restaurant.id }}"
+                {% endif %}>
+                </i>
+            {% endif %}
             <span><img src="{{ restaurant.category.icon.url }}"></span>
             <div class="card-content">
                 <h3 class="card-title">

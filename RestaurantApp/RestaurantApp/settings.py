@@ -131,7 +131,7 @@ STATICFILES_DIRS = [
 
 #Login/logout redirect
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = '/'
 
 #Media files
 MEDIA_URL = '/media/'

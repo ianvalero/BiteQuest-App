@@ -63,6 +63,18 @@ nav .logo img {
     width: 115px;
 }
 
+.nav-user {
+    display: flex;
+}
+
+#user {
+    color: #ffe347;
+    font-weight: bold;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
 .wave {
     z-index: -100;
     position: fixed;
