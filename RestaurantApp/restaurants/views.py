@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http.response import Http404
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 from django.db.models import Q
 from django.conf import settings
@@ -48,9 +49,12 @@ class RestaurantDetailView(DetailView):
     template_name = 'restaurants/restaurant_detail.html'
 
     def get(self, request, slug):
-        restaurant = Restaurant.objects.get(slug=slug)
-        context = {'restaurant': restaurant}
-        return render(request, self.template_name, context)
+        try:
+            restaurant = get_object_or_404(Restaurant, slug=slug)
+            context = {'restaurant': restaurant}
+            return render(request, self.template_name, context)
+        except Restaurant.DoesNotExist:
+            raise Http404("Restaurant does not exist")
 
 # class RestaurantCreateView(LoginRequiredMixin):
 class RestaurantCreateView(View):

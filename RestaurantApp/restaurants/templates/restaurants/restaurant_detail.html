@@ -1,0 +1,27 @@
+{% extends 'base_navbar.html' %}
+{% load static %}
+{% block extra_head %}
+<title>{{ restaurant.name }}</title>
+<link rel="stylesheet" href="{% static 'restaurants/css/card_details.css' %}">
+{% endblock %}
+{% block content %}
+<div id="content">
+    <section id="card-details-section">
+        <div id="card">
+            <img id="card-image" src="{{ restaurant.image.url }}" alt="{{ restaurant.name }} image">
+            <div id="card-details">
+                <h2>{{ restaurant.name }}</h2>
+                <p style="color: #4f4f4f">{{ restaurant.description }}</p>
+                <span><img src="{{ restaurant.category.icon.url }}" alt="{{ restaurant.category }} category"></span>
+                <p>
+                    {{ restaurant.address}}<br>
+                    {{ restaurant.phone_number }}<br>
+                    {{ restaurant.link }}<br>
+                </p>
+            </div>
+        </div>
+    </section>
+    <section id="comments-section"></section>
+</div>
+
+{% endblock %}

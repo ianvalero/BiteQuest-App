@@ -1,4 +1,27 @@
 
+.add-restaurant{
+    text-decoration: none;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    margin: 0 5rem 2rem 0;
+    border: 0;
+    color: #fff;
+    border-radius: 0.5rem;
+    background-color: #7d7abc;
+    padding: 5px 1rem;
+    font-weight: bold;
+}
+
+.add-restaurant:hover {
+    color: #fff;
+}
+
+.add-restaurant > svg{
+    width: 20px;
+    margin-right: 5px;
+}
+
 #restaurants_list {
     display: flex;
     justify-content: space-between;

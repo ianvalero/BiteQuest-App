@@ -1,0 +1,48 @@
+#content {
+    display: flex;
+}
+
+section{
+    width: 50%;
+    height: 100vh;
+}
+
+#card {
+    position: relative;
+    background-color: #FFD97D;
+    width: calc(100% - 6rem);
+    height: calc(100% - 6rem);
+    margin: 3rem;
+    border-radius: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+}
+
+#card-details {
+    padding: 2rem;
+}
+
+
+#card-details span{
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    border-radius: 50%;
+    background-color: #FFD97D;
+    padding: 0.2rem;
+    border: 2px solid #FEFEFA;
+    z-index: 1;
+}
+
+#card-details span > img {
+    width: 40px;
+    height: 40px;
+}
+
+#card-image {
+    width: 100%;
+    height: 40%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 1rem 1rem 0 0;
+}
+
