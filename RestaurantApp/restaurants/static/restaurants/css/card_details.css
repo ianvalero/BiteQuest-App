@@ -1,28 +1,42 @@
+#extend-header {
+    background-color: #7d7abc;
+    width: 100vw;
+    height: 5rem;
+    position: absolute;
+}
+
 #content {
     display: flex;
+    justify-content: center;
+    margin-top: 3rem;
 }
 
 section{
-    width: 50%;
+    width: 45vw;
     height: 100vh;
 }
 
+#card h1,
+h2,
+h3,
+h4,
+h5 {
+  font-weight: 800;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
 #card {
-    position: relative;
-    background-color: #FFD97D;
-    width: calc(100% - 6rem);
-    height: calc(100% - 6rem);
-    margin: 3rem;
-    border-radius: 1rem;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  width: 90%;
+  height: 90%;
+  position: relative;
+  overflow: hidden;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  border: 0;
+  border-radius: 10px;
 }
 
-#card-details {
-    padding: 2rem;
-}
-
-
-#card-details span{
+#card span {
     position: absolute;
     top: 15px;
     right: 15px;
@@ -33,16 +47,174 @@ section{
     z-index: 1;
 }
 
-#card-details span > img {
-    width: 40px;
-    height: 40px;
+#card span > img {
+    width: 30px;
+    height:30px;
+}
+
+#card .favorite {
+    position: absolute;
+    font-size: 25px;
+    top: 15px;
+    left: 15px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+#card .fa-bounce {
+    color: #f4d03f;
+    animation-iteration-count:2;
+}
+
+#card .fa-regular {
+    color: #fff;
+}
+
+#card #card-rating {
+    position: absolute;
+    font-size: 15px;
+    bottom: 5px;
+    right: 15px;
+    z-index: 1;
+    margin-bottom: 0.5rem;
+}
+
+#card-content {
+  width: 100%;
+  height: 60%;
+  background-color: #FFD97D;
+  padding: 0 3rem 2.5rem;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}
+
+#card-content::before{
+  content: "";
+  width: 100%;
+  height: 120px;
+  background-color: inherit;
+  position: absolute;
+  left: 0;
+  top: -80px;
+  clip-path: ellipse(60% 80px at bottom center);
+  z-index: -1;
+}
+
+#card-title {
+  font-size: 1.5rem;
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+#card-text {
+    font-size: 0.85rem;
+    text-align: center;
+    min-height: 45%;
 }
 
 #card-image {
-    width: 100%;
-    height: 40%;
-    object-fit: cover;
-    object-position: center;
-    border-radius: 1rem 1rem 0 0;
+  width: 100%;
+  height: 60%;
+  object-fit: cover;
+  object-position: center;
 }
 
+#card-content svg, .comment svg {
+    width: 30px;
+    padding: 5px;
+    bottom: 5px;
+    position: absolute;
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#card-phone > i, #card-address > i, #card-link > i{
+    margin-right: 10px;
+}
+
+#card-link a {
+    color: #7d7abc;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#card-content svg {
+    width: 30px;
+    padding: 5px;
+    bottom: 5px;
+    position: absolute;
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#edit-button {
+    border: 1px solid #7d7abc;
+    stroke: #7d7abc;
+    fill: #7d7abc;
+}
+
+#card-content #edit-button {
+    left: 2.5rem;
+}
+
+.comment #edit-button {
+    left: 2rem;
+    top: 1rem;
+}
+
+#edit-button:hover {
+    background-color: #7d7abc;
+    stroke: #FFD97D;
+    fill: #FFD97D;
+}
+
+#delete-button {
+    border: 1px solid #EE6055;
+    fill: #EE6055;
+}
+
+#card-content #delete-button {
+    left: calc(2.5rem + 35px);
+}
+
+.comment #delete-button {
+    left: calc(2rem + 35px);
+    top: 1rem;
+}
+
+#delete-button:hover {
+    background-color: #EE6055;
+    fill: #FFD97D;
+}
+
+#comments-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+#comments-box > h1, #card-details-section > h1 {
+    color: #FFD97D;
+    font-weight: 800;
+}
+
+.comment {
+    width: 100%;
+    background-color: #fff;
+    padding: 1rem 2rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    border: 0;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.comment-user {
+    text-align: end;
+    margin-bottom: 0.5rem;
+    color: #7d7abc;
+}
