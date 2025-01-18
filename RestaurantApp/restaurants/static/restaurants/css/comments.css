@@ -1,0 +1,103 @@
+#comments-section{
+    position: relative;
+}
+
+#comments-box {
+    width: 100%;
+    position: relative;
+}
+
+#comments-box > h1{
+    color: #FFD97D;
+    font-weight: 800;
+}
+
+.comment {
+    width: 100%;
+    background-color: #fff;
+    padding: 1rem 2rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    border: 0;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.comment svg {
+    width: 30px;
+    padding: 5px;
+    bottom: 5px;
+    position: absolute;
+    margin-bottom: 0.5rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.comment-user-data {
+    width: 100%;
+    text-align: end;
+    margin-bottom: 0.6rem;
+}
+
+.comment-user-data h5, .comment-user-data h6 {
+    display: inline;
+    color: #7d7abc;
+}
+
+ #add-comment-box > h6 {
+     font-weight: 800;
+ }
+
+#add-comment-box textarea {
+    background-color: #fff;
+    padding: 1rem 2rem;
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    border: 2px solid #7d7abc;
+    border-radius: 10px;
+    outline: none;
+    margin-bottom: 1rem;
+}
+
+#add-comment-box button {
+    font-size: large;
+    background-color: #7d7abc;
+    border: 0;
+    border-radius: .5rem;
+    color: #FFD97D;
+    padding: .5rem;
+    font-weight: bold;
+    width: 100%;
+}
+
+.comment #delete-button {
+    border: 1px solid #EE6055;
+    fill: #EE6055;
+}
+
+.comment #delete-button:hover {
+    background-color: #EE6055;
+    fill: #fff;
+}
+
+.comment #edit-button {
+    left: 2rem;
+    top: 1rem;
+}
+
+.comment #edit-button {
+    border: 1px solid #7d7abc;
+    stroke: #7d7abc;
+    fill: #7d7abc;
+}
+
+.comment #edit-button:hover {
+    background-color: #7d7abc;
+    stroke: #fff;
+    fill: #fff;
+}
+
+.comment #delete-button {
+    left: calc(2rem + 35px);
+    top: 1rem;
+}
