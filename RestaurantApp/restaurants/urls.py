@@ -17,4 +17,10 @@ urlpatterns = [
          name='restaurant_delete'),
     path('restaurant/<int:pk>/favorite', views.RestaurantFavoriteView.as_view(), name='restaurant_favorite'),
     path('restaurant/<int:pk>/unfavorite', views.RestaurantUnfavoriteView.as_view(), name='restaurant_unfavorite'),
+    path('restaurant/<slug:slug>/comment',
+         views.RestaurantCommentCreateView.as_view(),
+         name='restaurant_comment_create'),
+    path('restaurant/comment/<int:pk>/delete',
+         views.RestaurantCommentDeleteView.as_view(),
+         name='restaurant_comment_delete'),
 ]
