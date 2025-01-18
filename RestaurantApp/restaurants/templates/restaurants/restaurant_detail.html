@@ -1,8 +1,10 @@
 {% extends 'base_navbar.html' %}
 {% load static %}
+{% load humanize %}
 {% block extra_head %}
 <title>{{ restaurant.name }}</title>
 <link rel="stylesheet" href="{% static 'restaurants/css/card_details.css' %}">
+<link rel="stylesheet" href="{% static 'restaurants/css/comments.css' %}">
 {% endblock %}
 {% block content %}
 <div id="extend-header"></div>
@@ -74,9 +76,10 @@
     <section id="comments-section">
         <div id="comments-box">
             <h1>Comments</h1>
+            {% for comment in comments_list%}
             <div class="comment">
                 {% if restaurant.owner == user %}
-                <a href="{% url 'restaurants:restaurant_update' restaurant.slug %}">
+                <a href="{% url 'restaurants:restaurant_comment_delete' comment.id %}">
                     <svg id="edit-button" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -87,7 +90,7 @@
                         </g>
                     </svg>
                 </a>
-                <a href="{% url 'restaurants:restaurant_delete' restaurant.slug %}">
+                <a href="{% url 'restaurants:restaurant_comment_delete' comment.id %}">
                     <svg id="delete-button" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
                         <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
                         <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -99,35 +102,24 @@
                     </svg>
                 </a>
                 {% endif %}
-                <h5 class="comment-user">{{ user.username }}</h5>
-                <p class="comment-text">
-                    Comentario de ejemplo para ver como stilizar las cajas de comentarios, deberiamos añadir botones
-                    para editar y eliminar si eres el creador del comentario? Lo descubriremos.
-                </p>
+                <div class="comment-user-data">
+                    <h5 class="comment-user">{{ user.username }}</h5>
+                    <h6>({{ comment.updated_at|naturaltime }})</h6>
+                </div>
+                <p class="comment-text">{{ comment.text }}</p>
             </div>
-            <div class="comment">
-                <h5 class="comment-user">{{ user.username }}</h5>
-                <p class="comment-text">
-                    Donde podriamos poner los botones? De momento hemos puesto el username del user que ha creado el
-                    comentario en la parte superior derecha de la caja de comentario. Podemos poner los botones en
-                    la parte superior izquierda?, o mover el username a la izquierda y poner los botones a la derecha.
-                </p>
-            </div>
-            <div class="comment">
-                <h5 class="comment-user">{{ user.username }}</h5>
-                <p class="comment-text">
-                    Cuantos comentarios ponemos? Deberia de ser dependiendo de la altura del dispositivo, habrá
-                    dispositivos donde cabrán mas comentarios y dispositivos donde el espacio será mas reducido y cabrán
-                    menos.
-                </p>
-            </div>
-            <div class="comment">
-                <h5 class="comment-user">{{ user.username }}</h5>
-                <p class="comment-text">
-                    Estoy de acuerdo con vosotros.
-                </p>
-            </div>
+            {% endfor %}
+        </div>
+        <div id="add-comment-box">
+            <h6 {% if comments_list|length <= 1 %} style="color: #FFD97D;"
+                {% else %} style="color: #7d7abc;" {% endif %}>Your comment</h6>
+            <form method="POST" action="{% url 'restaurants:restaurant_comment_create' restaurant.slug %}">
+                {% csrf_token %}
+                <textarea name="comment" rows="3"></textarea>
+                <button type="submit" id="add-comment">Add comment</button>
+            </form>
         </div>
     </section>
 </div>
+<br><br><br><br><br><br><br><br><br>
 {% endblock %}
