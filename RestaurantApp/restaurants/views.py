@@ -7,7 +7,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 from django.db.models import Q
 from django.conf import settings
-from .models import Restaurant, Category
+from .models import Restaurant, Category, Comment
 from .forms import RestaurantForm
 import os, random
 
@@ -51,13 +51,13 @@ class RestaurantDetailView(DetailView):
     def get(self, request, slug):
         try:
             restaurant = get_object_or_404(Restaurant, slug=slug)
-            context = {'restaurant': restaurant}
+            comments = Comment.objects.filter(restaurant=restaurant).order_by('-created_at')
+            context = {'restaurant': restaurant, 'comments_list': comments}
             return render(request, self.template_name, context)
         except Restaurant.DoesNotExist:
             raise Http404("Restaurant does not exist")
 
-# class RestaurantCreateView(LoginRequiredMixin):
-class RestaurantCreateView(View):
+class RestaurantCreateView(View, LoginRequiredMixin):
     model = Restaurant
     template = 'restaurants/restaurant_form.html'
     success_url = reverse_lazy('restaurants:restaurant_list')
@@ -80,7 +80,7 @@ class RestaurantCreateView(View):
         form.save_m2m()
         return redirect(self.success_url)
 
-class RestaurantUpdateView(View):
+class RestaurantUpdateView(View, LoginRequiredMixin):
     model = Restaurant
     template = 'restaurants/restaurant_form.html'
     success_url = reverse_lazy('restaurants:restaurant_list')
@@ -89,7 +89,7 @@ class RestaurantUpdateView(View):
         form = RestaurantForm()
         return render(request, self.template, {'form': form})
 
-class RestaurantDeleteView(View):
+class RestaurantDeleteView(View, LoginRequiredMixin):
     model = Restaurant
     template = 'restaurants/restaurant_form.html'
     success_url = reverse_lazy('restaurants:restaurant_list')
@@ -98,8 +98,23 @@ class RestaurantDeleteView(View):
         form = RestaurantForm()
         return render(request, self.template, {'form': form})
 
-class RestaurantFavoriteView(View):
+class RestaurantFavoriteView(View, LoginRequiredMixin):
     pass
 
-class RestaurantUnfavoriteView(View):
+class RestaurantUnfavoriteView(View, LoginRequiredMixin):
     pass
+
+class RestaurantCommentCreateView(View, LoginRequiredMixin):
+    model = Comment
+    def post(self, request, slug):
+        restaurant = get_object_or_404(Restaurant, slug=slug)
+        success_url = reverse_lazy('restaurants:restaurant_detail', args=[slug])
+        comment = Comment(text=request.POST['comment'], restaurant=restaurant, owner=request.user)
+        comment.save()
+        return redirect(success_url)
+
+class RestaurantCommentDeleteView(View, LoginRequiredMixin):
+    model = Comment
+    def post(self, request, comment_id):
+        comment = get_object_or_404(Comment, pk=comment_id)
+        success_url = reverse_lazy('restaurants:restaurant_detail', args=[self.object.restaurant.slug])
