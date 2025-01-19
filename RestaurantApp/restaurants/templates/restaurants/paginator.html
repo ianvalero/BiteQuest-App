@@ -1,0 +1,12 @@
+{% load filters %}
+
+{% for page in paginator %}
+    {% if page|is_integer %}
+        <a href="{% url 'restaurants:restaurant_detail' restaurant.slug %}?page={{ page }}"
+        {% if page == page_number|add:"0" %} class="selected" {% endif %}
+        {% if page < 10 %} style="padding: 0.5rem 0.75rem;" {% else %} style="padding: 0.5rem 0.5rem;" {% endif %}
+        >{{ page }}</a>
+    {% else %}
+        ...
+    {% endif %}
+{% endfor %}

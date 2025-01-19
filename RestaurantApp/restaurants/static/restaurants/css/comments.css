@@ -8,7 +8,7 @@
 }
 
 #comments-box > h1{
-    color: #FFD97D;
+    color: #ffe347;
     font-weight: 800;
 }
 
@@ -46,13 +46,13 @@
 
  #add-comment-box > h6 {
      font-weight: 800;
+     color: #7d7abc;
  }
 
 #add-comment-box textarea {
     background-color: #fff;
     padding: 1rem 2rem;
     width: 100%;
-    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
     border: 2px solid #7d7abc;
     border-radius: 10px;
     outline: none;
@@ -101,3 +101,38 @@
     left: calc(2rem + 35px);
     top: 1rem;
 }
+
+#user-comment-box {
+    background-color: #fff;
+    margin-top: 3rem;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    border-radius: 10px;
+    padding: 1rem 2rem;
+}
+
+#comments-paginator {
+    padding-top: 1rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#comments-paginator .selected {
+    background-color: #7d7abc;
+    color: #ffe347;
+}
+
+#comments-paginator a{
+    text-decoration: None;
+    border: 2px solid #7d7abc;
+    border-radius: 0.5rem;
+    margin: 0 0.25rem;
+    color: #7d7abc;
+    font-weight: bold;
+}
+
+#comments-paginator a:hover{
+    background-color: #7d7abc;
+    color: #ffe347;
+}
+
+

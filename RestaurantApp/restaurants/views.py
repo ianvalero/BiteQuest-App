@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.http.response import Http404
 from django.urls import reverse_lazy
 from django.views import View
@@ -51,8 +52,14 @@ class RestaurantDetailView(DetailView):
     def get(self, request, slug):
         try:
             restaurant = get_object_or_404(Restaurant, slug=slug)
+            page_number = request.GET.get('page', 1)
             comments = Comment.objects.filter(restaurant=restaurant).order_by('-created_at')
-            context = {'restaurant': restaurant, 'comments_list': comments}
+            paginator = Paginator(comments, per_page=2)
+            page_object = paginator.get_page(page_number)
+            context = {'restaurant': restaurant,
+                       'comments_list': page_object,
+                       'page_number': page_number,
+                       'paginator': list(paginator.get_elided_page_range(number=page_number, on_each_side=1, on_ends=1,))}
             return render(request, self.template_name, context)
         except Restaurant.DoesNotExist:
             raise Http404("Restaurant does not exist")
