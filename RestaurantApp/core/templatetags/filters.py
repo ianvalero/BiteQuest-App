@@ -10,3 +10,7 @@ login_images = len(os.listdir(login_images_dir))
 @register.filter
 def random_image(path):
     return f"{path}/login{random.randint(1, login_images)}.svg"
+
+@register.filter
+def is_integer(value):
+    return isinstance(value, int)
