@@ -110,14 +110,20 @@
             </div>
             {% endfor %}
         </div>
-        <div id="add-comment-box">
-            <h6 {% if comments_list|length <= 1 %} style="color: #FFD97D;"
-                {% else %} style="color: #7d7abc;" {% endif %}>Your comment</h6>
-            <form method="POST" action="{% url 'restaurants:restaurant_comment_create' restaurant.slug %}">
-                {% csrf_token %}
-                <textarea name="comment" rows="3"></textarea>
-                <button type="submit" id="add-comment">Add comment</button>
-            </form>
+        <div id="user-comment-box">
+            {% if paginator|length > 1 %}
+            <div id="comments-paginator">
+                {% include "restaurants/paginator.html" %}
+            </div>
+            {% endif %}
+            <div id="add-comment-box">
+                <h6>Your comment</h6>
+                <form method="POST" action="{% url 'restaurants:restaurant_comment_create' restaurant.slug %}">
+                    {% csrf_token %}
+                    <textarea name="comment" rows="3"></textarea>
+                    <button type="submit" id="add-comment">Add comment</button>
+                </form>
+            </div>
         </div>
     </section>
 </div>
