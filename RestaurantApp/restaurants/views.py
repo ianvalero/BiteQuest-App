@@ -54,7 +54,7 @@ class RestaurantDetailView(DetailView):
             restaurant = get_object_or_404(Restaurant, slug=slug)
             page_number = request.GET.get('page', 1)
             comments = Comment.objects.filter(restaurant=restaurant).order_by('-created_at')
-            paginator = Paginator(comments, per_page=2)
+            paginator = Paginator(comments, per_page=5)
             page_object = paginator.get_page(page_number)
             context = {'restaurant': restaurant,
                        'comments_list': page_object,
