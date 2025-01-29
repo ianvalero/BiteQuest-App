@@ -11,16 +11,24 @@
 <svg style="position: absolute;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#7d7abc" fill-opacity="1" d="M0,224L34.3,234.7C68.6,245,137,267,206,240C274.3,213,343,139,411,101.3C480,64,549,64,617,101.3C685.7,139,754,213,823,250.7C891.4,288,960,288,1029,266.7C1097.1,245,1166,203,1234,208C1302.9,213,1371,267,1406,293.3L1440,320L1440,0L1405.7,0C1371.4,0,1303,0,1234,0C1165.7,0,1097,0,1029,0C960,0,891,0,823,0C754.3,0,686,0,617,0C548.6,0,480,0,411,0C342.9,0,274,0,206,0C137.1,0,69,0,34,0L0,0Z"></path></svg>
 <div id="content">
     <section id="card-details-section">
-        <h1 style="visibility: hidden">Card</h1>
+        <h1>
+            <span>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+                <i class="fa-regular fa-star"></i>
+            </span>
+        </h1>
         <div id="card">
             {% if user.is_authenticated %}
                 <i
                 {% if restaurant.id in favorites %}
-                    class="favorite fa-solid fa-star fa-bounce"
+                    class="favorite fa-solid fa-heart fa-bounce"
                     onclick="favRestaurant('{% url 'restaurants:restaurant_unfavorite' restaurant.id %}', {{ restaurant.id }});return false;"
                     id="favorite_star_{{ restaurant.id }}"
                 {% else %}
-                    class="favorite fa-regular fa-star"
+                    class="favorite fa-regular fa-heart"
                     onclick="favRestaurant('{% url 'restaurants:restaurant_favorite' restaurant.id %}', {{ restaurant.id }});return false;"
                     id="unfavorite_star_{{ restaurant.id }}"
                 {% endif %}>
@@ -74,8 +82,8 @@
         </div>
     </section>
     <section id="comments-section">
+        <h1>Comments</h1>
         <div id="comments-box">
-            <h1>Comments</h1>
             {% for comment in comments_list%}
             <div class="comment">
                 {% if restaurant.owner == user %}
@@ -127,5 +135,4 @@
         </div>
     </section>
 </div>
-<br><br><br><br><br><br><br><br><br>
 {% endblock %}

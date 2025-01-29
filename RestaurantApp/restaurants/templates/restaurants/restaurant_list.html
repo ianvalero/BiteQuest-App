@@ -47,11 +47,11 @@
             {% if user.is_authenticated %}
                 <i
                 {% if restaurant.id in favorites %}
-                    class="favorite fa-solid fa-star fa-bounce"
+                    class="favorite fa-solid fa-heart fa-bounce"
                     onclick="favRestaurant('{% url 'restaurants:restaurant_unfavorite' restaurant.id %}', {{ restaurant.id }});return false;"
                     id="favorite_star_{{ restaurant.id }}"
                 {% else %}
-                    class="favorite fa-regular fa-star"
+                    class="favorite fa-regular fa-heart"
                     onclick="favRestaurant('{% url 'restaurants:restaurant_favorite' restaurant.id %}', {{ restaurant.id }});return false;"
                     id="unfavorite_star_{{ restaurant.id }}"
                 {% endif %}>
