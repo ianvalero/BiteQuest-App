@@ -11,13 +11,18 @@
 <svg style="position: absolute;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#7d7abc" fill-opacity="1" d="M0,224L34.3,234.7C68.6,245,137,267,206,240C274.3,213,343,139,411,101.3C480,64,549,64,617,101.3C685.7,139,754,213,823,250.7C891.4,288,960,288,1029,266.7C1097.1,245,1166,203,1234,208C1302.9,213,1371,267,1406,293.3L1440,320L1440,0L1405.7,0C1371.4,0,1303,0,1234,0C1165.7,0,1097,0,1029,0C960,0,891,0,823,0C754.3,0,686,0,617,0C548.6,0,480,0,411,0C342.9,0,274,0,206,0C137.1,0,69,0,34,0L0,0Z"></path></svg>
 <div id="content">
     <section id="card-details-section">
-        <h1>
+        <h1 id="user-rating" data-rate-url="{% url 'restaurants:restaurant_rate' restaurant.slug %}"
+        {% if not user.is_authenticated %}style="visibility: hidden;"{% endif %}>
             <span>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-regular fa-star"></i>
-                <i class="fa-regular fa-star"></i>
+                {% with range_list="1,2,3,4,5" %}
+                    {% for i in range_list|cut:"," %}
+                        {% if i <= user_raiting|slugify  %}
+                            <i class="rating-button fa-solid fa-star fa-flip" data-score="{{ i }}"></i>
+                        {% else %}
+                            <i class="rating-button fa-regular fa-star" data-score="{{ i }}"></i>
+                        {% endif %}
+                    {% endfor %}
+                {% endwith %}
             </span>
         </h1>
         <div id="card">
@@ -26,11 +31,11 @@
                 {% if restaurant.id in favorites %}
                     class="favorite fa-solid fa-heart fa-bounce"
                     onclick="favRestaurant('{% url 'restaurants:restaurant_unfavorite' restaurant.id %}', {{ restaurant.id }});return false;"
-                    id="favorite_star_{{ restaurant.id }}"
+                    id="favorite_heart_{{ restaurant.id }}"
                 {% else %}
                     class="favorite fa-regular fa-heart"
                     onclick="favRestaurant('{% url 'restaurants:restaurant_favorite' restaurant.id %}', {{ restaurant.id }});return false;"
-                    id="unfavorite_star_{{ restaurant.id }}"
+                    id="unfavorite_heart_{{ restaurant.id }}"
                 {% endif %}>
                 </i>
             {% endif %}
@@ -52,7 +57,9 @@
                         <a href="{{ restaurant.link }}" target="_blank">Go to website</a>
                     </p>
                 {% endif %}
-                <p id="card-rating">4.5 <i class="fa-solid fa-star"></i></p>
+                {% if restaurant.avg_rating %}
+                	<p id="card-rating">{{ restaurant.avg_rating }} <i class="fa-solid fa-star"></i></p>
+                {% endif %}
                 {% if restaurant.owner == user %}
                 <a href="{% url 'restaurants:restaurant_update' restaurant.slug %}">
                     <svg id="edit-button" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -125,14 +132,26 @@
             </div>
             {% endif %}
             <div id="add-comment-box">
-                <h6>Your comment</h6>
+                <h6>Your comment {% if not user.is_authenticated %}<span>(Login required)</span>{% endif %}</h6>
                 <form method="POST" action="{% url 'restaurants:restaurant_comment_create' restaurant.slug %}">
                     {% csrf_token %}
-                    <textarea name="comment" rows="3"></textarea>
-                    <button type="submit" id="add-comment">Add comment</button>
+                    <textarea
+                        name="comment"
+                        rows="2"
+                        {% if not user.is_authenticated %}class="add-comment-disabled" disabled{% endif %}>
+                    </textarea>
+                    <button
+                        type="submit"
+                        id="add-comment"
+                        {% if not user.is_authenticated %}class="add-comment-disabled" disabled{% endif %}>
+                        Add comment
+                    </button>
                 </form>
             </div>
         </div>
     </section>
 </div>
+{% endblock %}
+{% block javascripts %}
+<script src="{% static 'restaurants/js/restaurant_rating.js' %}"></script>
 {% endblock %}
