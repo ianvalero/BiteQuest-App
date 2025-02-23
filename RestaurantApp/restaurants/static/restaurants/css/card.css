@@ -1,10 +1,14 @@
-
 .add-restaurant{
+    display: flex;
+    justify-content: flex-end
+}
+
+.add-restaurant > a{
     text-decoration: none;
     display: flex;
     justify-content: right;
     align-items: center;
-    margin: 0 5rem 2rem 0;
+    margin: 0 0 2rem 0;
     border: 0;
     color: #fff;
     border-radius: 0.5rem;
@@ -17,7 +21,7 @@
     color: #fff;
 }
 
-.add-restaurant > svg{
+.add-restaurant > a > svg{
     width: 20px;
     margin-right: 5px;
 }
@@ -67,13 +71,13 @@ h5 {
 }
 
 .card span > img {
-    width: 30px;
-    height:30px;
+    width: 2rem;
+    height: 2rem;
 }
 
 .card .favorite {
     position: absolute;
-    font-size: 25px;
+    font-size: 2rem;
     top: 15px;
     left: 15px;
     z-index: 1;
