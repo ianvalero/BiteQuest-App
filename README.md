@@ -5,6 +5,6 @@ Lista de punts por hacer en la APP
 - [ ] Página creación de restaurante
 - [ ] Página edición de restaurante
 - [ ] Página error 404
-- [ ] Botón de favoritos
+- [X] Botón de favoritos
 - [ ] Mostrar primero los restaurantes favoritos
 - [ ] Web responsive
