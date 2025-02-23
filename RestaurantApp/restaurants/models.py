@@ -36,8 +36,7 @@ class Restaurant(models.Model):
     phone_number = models.CharField(max_length=13)
     link = models.URLField(max_length=500, blank=True, null=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='owned_restaurants')
-    favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Favorite',
-                                       related_name='favorite_restaurant')
+    favorites = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Favorite', related_name='favorite_restaurant')
     ratings = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Rating', name='rating_restaurant')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -63,8 +62,10 @@ class Favorite(models.Model):
     restaurant = models.ForeignKey(Restaurant, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='favorites_users')
 
-    def Meta(self):
-        constraints = UniqueConstraint(fields=['restaurant', 'user'], name='unique_favorite')
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['restaurant', 'user'], name='unique_favorite')
+        ]
 
     def __str__(self) -> str:
         return f'{self.user.username} likes {self.restaurant.name}'
