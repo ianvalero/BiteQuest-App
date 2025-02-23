@@ -77,7 +77,7 @@ class Rating(models.Model):
         MaxValueValidator(limit_value=5)
     ])
 
-    def Meta(self):
+    class Meta:
         constraints = [
             UniqueConstraint(fields=['restaurant', 'user'], name='unique_rating')
         ]
