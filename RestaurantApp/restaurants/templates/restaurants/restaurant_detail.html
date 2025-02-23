@@ -28,15 +28,9 @@
         <div id="card">
             {% if user.is_authenticated %}
                 <i
-                {% if restaurant.id in favorites %}
-                    class="favorite fa-solid fa-heart fa-bounce"
-                    onclick="favRestaurant('{% url 'restaurants:restaurant_unfavorite' restaurant.id %}', {{ restaurant.id }});return false;"
-                    id="favorite_heart_{{ restaurant.id }}"
-                {% else %}
-                    class="favorite fa-regular fa-heart"
-                    onclick="favRestaurant('{% url 'restaurants:restaurant_favorite' restaurant.id %}', {{ restaurant.id }});return false;"
-                    id="unfavorite_heart_{{ restaurant.id }}"
-                {% endif %}>
+                    class="favorite fa-heart {% if favorite %} fa-solid fa-bounce {% else %} fa-regular {% endif %}"
+                    data-favorite-url="{% url 'restaurants:restaurant_toggle_favorite' restaurant.slug %}"
+                    id="favorite_heart_{{ restaurant.slug }}">
                 </i>
             {% endif %}
             <span><img src="{{ restaurant.category.icon.url }}"></span>
@@ -153,5 +147,8 @@
 </div>
 {% endblock %}
 {% block javascripts %}
-<script src="{% static 'restaurants/js/restaurant_rating.js' %}"></script>
+    {% if user.is_authenticated %}
+        <script src="{% static 'restaurants/js/restaurant_rating.js' %}"></script>
+        <script src="{% static 'restaurants/js/restaurant_toggle_favorite.js' %}"></script>
+    {% endif %}
 {% endblock %}
