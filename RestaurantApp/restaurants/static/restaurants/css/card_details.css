@@ -57,17 +57,25 @@ h5 {
 }
 
 #card span > img {
-    width: 30px;
-    height:30px;
+    width: 2rem;
+    height: 2rem;
+}
+
+.favorite, .rating-button {
+    cursor: pointer;
 }
 
 #card .favorite {
     position: absolute;
-    font-size: 25px;
+    font-size: 2rem;
     top: 15px;
     left: 15px;
     z-index: 1;
     cursor: pointer;
+}
+
+.fa-flip {
+    animation-iteration-count:1;
 }
 
 #card .favorite.fa-bounce {
