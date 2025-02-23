@@ -3,10 +3,3 @@ Verde fuerte --> #60D394
 Verde claro --> #AAF683 -------------> #ffe347
 Amarillo claro --> #FFD97D ----------> #7d7abc
 Rojo claro --> #FF9B85
-
-
-
-<!--        {% if user.is_authenticated %} -->
-<!--        <i class="favorite fa-regular fa-star"></i>-->
-            <i class="favorite fa-solid fa-star fa-bounce"></i>
-<!--        {% endif %}-->
