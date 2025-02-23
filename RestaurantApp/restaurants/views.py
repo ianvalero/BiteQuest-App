@@ -1,14 +1,14 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.http.response import Http404
+from django.http.response import Http404, HttpResponse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
-from django.db.models import Q
+from django.db.models import Q, Avg
 from django.conf import settings
-from .models import Restaurant, Category, Comment
+from .models import Restaurant, Category, Comment, Rating
 from .forms import RestaurantForm
 import os, random
 
@@ -18,7 +18,7 @@ class RestaurantListView(ListView):
 
     def get(self, request):
         categories_list = Category.objects.all()
-        restaurant_list = Restaurant.objects.all()
+        restaurant_list = Restaurant.objects.annotate(avg_rating=Avg('rating__score')).order_by('-avg_rating')
         context = {'categories_list': categories_list, 'restaurant_list': restaurant_list}
         return render(request, self.template_name, context)
 
@@ -27,7 +27,7 @@ class RestaurantListView(ListView):
         search = request.POST.get('search', False)
         categories_list = Category.objects.all()
         if not disabled_categories and not search:
-            restaurant_list = Restaurant.objects.all()
+            restaurant_list = Restaurant.objects.annotate(avg_rating=Avg('rating__score')).order_by('-avg_rating')
         else:
             restaurant_list = Restaurant.objects
             if disabled_categories:
@@ -37,6 +37,7 @@ class RestaurantListView(ListView):
                 query = Q(name__icontains=search)
                 query.add(Q(description__icontains=search), Q.OR)
                 restaurant_list = restaurant_list.filter(query).select_related().distinct()
+            restaurant_list = restaurant_list.annotate(avg_rating=Avg('rating__score')).order_by('-avg_rating')
         context = {
             'categories_list': categories_list,
             'restaurant_list': restaurant_list,
@@ -51,12 +52,16 @@ class RestaurantDetailView(DetailView):
 
     def get(self, request, slug):
         try:
-            restaurant = get_object_or_404(Restaurant, slug=slug)
+            restaurant = get_object_or_404(Restaurant.objects.annotate(avg_rating=Avg('rating__score')), slug=slug)
+            user_raiting = None
+            if request.user.is_authenticated:
+                user_raiting = Rating.objects.filter(restaurant=restaurant, user=request.user).first()
             page_number = request.GET.get('page', 1)
             comments = Comment.objects.filter(restaurant=restaurant).order_by('-created_at')
             paginator = Paginator(comments, per_page=5)
             page_object = paginator.get_page(page_number)
             context = {'restaurant': restaurant,
+                       'user_raiting': getattr(user_raiting,'score', 0),
                        'comments_list': page_object,
                        'page_number': page_number,
                        'paginator': list(paginator.get_elided_page_range(number=page_number, on_each_side=1, on_ends=1,))}
@@ -125,3 +130,20 @@ class RestaurantCommentDeleteView(View, LoginRequiredMixin):
     def post(self, request, comment_id):
         comment = get_object_or_404(Comment, pk=comment_id)
         success_url = reverse_lazy('restaurants:restaurant_detail', args=[self.object.restaurant.slug])
+
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RestaurantRateView(View, LoginRequiredMixin):
+    model = Rating
+    def post(self, request, slug):
+        restaurant = get_object_or_404(Restaurant, slug=slug)
+        user_raiting = Rating.objects.filter(restaurant=restaurant, user=request.user).first()
+        print(user_raiting)
+        if user_raiting:
+            user_raiting.score = request.POST['score']
+        else:
+            user_raiting = Rating(restaurant=restaurant, user=request.user, score=request.POST['score'])
+        user_raiting.save()
+        return HttpResponse()
