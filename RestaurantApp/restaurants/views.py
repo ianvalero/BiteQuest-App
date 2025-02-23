@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.http.response import Http404, HttpResponse
+from django.http.response import Http404, HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, DetailView
@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
 from django.db.models import Q, Avg
 from django.conf import settings
-from .models import Restaurant, Category, Comment, Rating
+from .models import Restaurant, Category, Comment, Rating, Favorite
 from .forms import RestaurantForm
 import os, random
 
@@ -19,7 +19,14 @@ class RestaurantListView(ListView):
     def get(self, request):
         categories_list = Category.objects.all()
         restaurant_list = Restaurant.objects.annotate(avg_rating=Avg('rating__score')).order_by('-avg_rating')
-        context = {'categories_list': categories_list, 'restaurant_list': restaurant_list}
+        favorite_list = []
+        if request.user.is_authenticated:
+            favorite_list = Favorite.objects.filter(user=request.user).values_list('restaurant', flat=True)
+        context = {
+            'categories_list': categories_list,
+            'restaurant_list': restaurant_list,
+            'favorite_list': favorite_list
+        }
         return render(request, self.template_name, context)
 
     def post(self, request):
@@ -38,9 +45,16 @@ class RestaurantListView(ListView):
                 query.add(Q(description__icontains=search), Q.OR)
                 restaurant_list = restaurant_list.filter(query).select_related().distinct()
             restaurant_list = restaurant_list.annotate(avg_rating=Avg('rating__score')).order_by('-avg_rating')
+        favorite_list = []
+        if request.user.is_authenticated:
+            favorite_list = Favorite.objects.filter(
+                user=request.user,
+                restaurant__in=restaurant_list.values_list('id', flat=True)
+            ).values_list('restaurant', flat=True)
         context = {
             'categories_list': categories_list,
             'restaurant_list': restaurant_list,
+            'favorite_list':  favorite_list,
             'search': search,
             'disabled_categories': [] if not disabled_categories else list(map(int, disabled_categories.split(",")))
         }
@@ -54,17 +68,22 @@ class RestaurantDetailView(DetailView):
         try:
             restaurant = get_object_or_404(Restaurant.objects.annotate(avg_rating=Avg('rating__score')), slug=slug)
             user_raiting = None
+            favorite = False
             if request.user.is_authenticated:
                 user_raiting = Rating.objects.filter(restaurant=restaurant, user=request.user).first()
+                favorite = True if Favorite.objects.filter(restaurant=restaurant, user=request.user).first() else False
             page_number = request.GET.get('page', 1)
             comments = Comment.objects.filter(restaurant=restaurant).order_by('-created_at')
             paginator = Paginator(comments, per_page=5)
             page_object = paginator.get_page(page_number)
-            context = {'restaurant': restaurant,
-                       'user_raiting': getattr(user_raiting,'score', 0),
-                       'comments_list': page_object,
-                       'page_number': page_number,
-                       'paginator': list(paginator.get_elided_page_range(number=page_number, on_each_side=1, on_ends=1,))}
+            context = {
+                'restaurant': restaurant,
+                'user_raiting': getattr(user_raiting,'score', 0),
+                'favorite': favorite,
+                'comments_list': page_object,
+                'page_number': page_number,
+                'paginator': list(paginator.get_elided_page_range(number=page_number, on_each_side=1, on_ends=1,))
+            }
             return render(request, self.template_name, context)
         except Restaurant.DoesNotExist:
             raise Http404("Restaurant does not exist")
@@ -110,12 +129,6 @@ class RestaurantDeleteView(View, LoginRequiredMixin):
         form = RestaurantForm()
         return render(request, self.template, {'form': form})
 
-class RestaurantFavoriteView(View, LoginRequiredMixin):
-    pass
-
-class RestaurantUnfavoriteView(View, LoginRequiredMixin):
-    pass
-
 class RestaurantCommentCreateView(View, LoginRequiredMixin):
     model = Comment
     def post(self, request, slug):
@@ -131,19 +144,24 @@ class RestaurantCommentDeleteView(View, LoginRequiredMixin):
         comment = get_object_or_404(Comment, pk=comment_id)
         success_url = reverse_lazy('restaurants:restaurant_detail', args=[self.object.restaurant.slug])
 
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-
-@method_decorator(csrf_exempt, name='dispatch')
 class RestaurantRateView(View, LoginRequiredMixin):
     model = Rating
     def post(self, request, slug):
         restaurant = get_object_or_404(Restaurant, slug=slug)
         user_raiting = Rating.objects.filter(restaurant=restaurant, user=request.user).first()
-        print(user_raiting)
         if user_raiting:
             user_raiting.score = request.POST['score']
         else:
             user_raiting = Rating(restaurant=restaurant, user=request.user, score=request.POST['score'])
         user_raiting.save()
         return HttpResponse()
+
+class RestaurantToggleFavoriteView(View, LoginRequiredMixin):
+    model = Favorite
+    def post(self, request, slug):
+        restaurant = get_object_or_404(Restaurant, slug=slug)
+        favorite, created = Favorite.objects.get_or_create(restaurant=restaurant, user=request.user)
+        if not created:
+            favorite.delete()
+            return JsonResponse({'favorited': False})
+        return JsonResponse({'favorited': True})
