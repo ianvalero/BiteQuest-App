@@ -13,7 +13,7 @@
     </ul>
     <ul class="nav-user">
         {% if user.is_authenticated %}
-            <li id="user">{{ user.username }}</a></li>
+            <li id="user"><a>{{ user.username }}</a></li>
             <li>
                 <form action="{% url 'logout' %}" method="post">
                     {% csrf_token %}
