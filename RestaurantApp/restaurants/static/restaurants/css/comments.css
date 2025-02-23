@@ -78,16 +78,22 @@
  #add-comment-box > h6 {
      font-weight: 800;
      color: #7d7abc;
+     margin-top: 0.75rem;
  }
 
+#add-comment-box > h6 > span{
+    font-weight: normal;
+}
+
 #add-comment-box textarea {
+    color: #7d7abc;
     background-color: #fff;
     padding: 1rem 2rem;
     width: 100%;
     border: 2px solid #7d7abc;
     border-radius: 10px;
     outline: none;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 #add-comment-box button {
@@ -99,6 +105,15 @@
     padding: .5rem;
     font-weight: bold;
     width: 100%;
+}
+
+#add-comment-box textarea.add-comment-disabled {
+    background-color: #EBEBE4;
+}
+
+#add-comment-box button.add-comment-disabled {
+    background-color: #EBEBE4;
+    color: #737370;
 }
 
 .comment #delete-button {
@@ -144,9 +159,8 @@
 }
 
 #comments-paginator {
-    padding-top: 1rem;
+    padding-top: 0.5rem;
     text-align: center;
-    margin-bottom: 1rem;
 }
 
 #comments-paginator .selected {
