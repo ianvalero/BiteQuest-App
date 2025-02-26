@@ -38,11 +38,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_htmx',
     'crispy_forms',
     'crispy_bootstrap5',
 
     'restaurants.apps.RestaurantsConfig',
-    'core.apps.CoreConfig'
+    'core.apps.CoreConfig',
 ]
 
 # Crispy bootstrap5 vars
@@ -57,6 +58,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'RestaurantApp.urls'
