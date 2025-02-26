@@ -4,6 +4,7 @@ from django.db.models.expressions import Case, When
 from django.http.response import Http404, HttpResponse, JsonResponse
 from django.urls import reverse_lazy
 from django.views import View
+from django.views.decorators.http import require_POST
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.text import slugify
@@ -19,24 +20,8 @@ class RestaurantListView(ListView):
 
     def get(self, request):
         categories_list = Category.objects.all()
-        favorite_list = []
-
-        if request.user.is_authenticated:
-            favorite_list = Favorite.objects.filter(user=request.user).values_list('restaurant', flat=True)
-
-        restaurant_list = Restaurant.objects.annotate(
-            is_favorite = Case(
-                When(id__in=favorite_list, then=True),
-                default=False,
-                output_field=BooleanField()
-            ),
-            avg_rating=Avg('rating__score')
-        ).order_by('-is_favorite','-avg_rating')
-
         context = {
-            'categories_list': categories_list,
-            'restaurant_list': restaurant_list,
-            'favorite_list': favorite_list
+            'categories_list': categories_list
         }
         return render(request, self.template_name, context)
 
@@ -44,43 +29,60 @@ class RestaurantListView(ListView):
         disabled_categories = request.POST.get('disabled_categories', False)
         search = request.POST.get('search', False)
         categories_list = Category.objects.all()
-
-        if not disabled_categories and not search:
-            restaurant_list = Restaurant.objects.annotate(avg_rating=Avg('rating__score'))
-        else:
-            restaurant_list = Restaurant.objects
-            if disabled_categories:
-                excluded_categories = list(disabled_categories.split(","))
-                restaurant_list = restaurant_list.exclude(category__pk__in=excluded_categories)
-            if search:
-                query = Q(name__icontains=search)
-                query.add(Q(description__icontains=search), Q.OR)
-                restaurant_list = restaurant_list.filter(query).select_related().distinct()
-            restaurant_list = restaurant_list.annotate(avg_rating=Avg('rating__score'))
-
-        favorite_list = []
-        if request.user.is_authenticated:
-            favorite_list = Favorite.objects.filter(
-                user=request.user,
-                restaurant__in=restaurant_list.values_list('id', flat=True)
-            ).values_list('restaurant', flat=True)
-
-        restaurant_list = restaurant_list.annotate(
-            is_favorite = Case(
-                When(id__in=favorite_list, then=True),
-                default=False,
-                output_field=BooleanField()
-            )
-        ).order_by('-is_favorite','-avg_rating')
-
         context = {
             'categories_list': categories_list,
-            'restaurant_list': restaurant_list,
-            'favorite_list':  favorite_list,
             'search': search,
             'disabled_categories': [] if not disabled_categories else list(map(int, disabled_categories.split(",")))
         }
         return render(request, self.template_name, context)
+
+@require_POST
+def get_restaurants(request):
+    disabled_categories = request.POST.get('disabled_categories', False)
+    search = request.POST.get('search', False)
+    page_number = request.GET.get('page', 1)
+
+    if not disabled_categories and not search:
+        restaurant_list = Restaurant.objects.annotate(avg_rating=Avg('rating__score'))
+    else:
+        restaurant_list = Restaurant.objects
+
+        if disabled_categories:
+            excluded_categories = list(disabled_categories.split(","))
+            restaurant_list = restaurant_list.exclude(category__pk__in=excluded_categories)
+
+        if search:
+            query = Q(name__icontains=search)
+            query.add(Q(description__icontains=search), Q.OR)
+            restaurant_list = restaurant_list.filter(query).select_related().distinct()
+        restaurant_list = restaurant_list.annotate(avg_rating=Avg('rating__score'))
+
+    favorite_list = []
+    if request.user.is_authenticated:
+        favorite_list = Favorite.objects.filter(
+            user=request.user,
+            restaurant__in=restaurant_list.values_list('id', flat=True)
+        ).values_list('restaurant', flat=True)
+
+    restaurant_list = restaurant_list.annotate(
+        is_favorite=Case(
+            When(id__in=favorite_list, then=True),
+            default=False,
+            output_field=BooleanField()
+        )
+    ).order_by('-is_favorite', '-avg_rating')
+
+    restaurant_paginator = Paginator(restaurant_list, per_page=10)
+    restaurant_list = restaurant_paginator.get_page(page_number)
+
+    data = {
+        'restaurant_list': restaurant_list,
+        'favorite_list': favorite_list,
+        'search': search,
+        'page': int(page_number) + 1,
+        'has_more': restaurant_list.has_next()
+    }
+    return render(request, 'restaurants/snippet/_restaurant_list.html', data)
 
 class RestaurantDetailView(DetailView):
     model = Restaurant
@@ -94,7 +96,7 @@ class RestaurantDetailView(DetailView):
             if request.user.is_authenticated:
                 user_raiting = Rating.objects.filter(restaurant=restaurant, user=request.user).first()
                 favorite = True if Favorite.objects.filter(restaurant=restaurant, user=request.user).first() else False
-            page_number = request.GET.get('page', 1)
+                page_number = request.GET.get('page', 1)
             comments = Comment.objects.filter(restaurant=restaurant).order_by('-created_at')
             paginator = Paginator(comments, per_page=5)
             page_object = paginator.get_page(page_number)
