@@ -1,12 +1,11 @@
-document.addEventListener('DOMContentLoaded', function() {
-    let botones = document.querySelectorAll('.favorite');
-    botones.forEach(function(elem) {
-        elem.addEventListener('click', function(event) {
-            let favUrl = event.currentTarget.dataset.favoriteUrl;
-            toggleFavoriteRestaurant(favUrl, event.currentTarget);
-        });
-    });
+document.getElementById('restaurants_list').addEventListener('click', function(event) {
+    let button = event.target.closest('.favorite');
+    if (button) {
+        let favUrl = button.dataset.favoriteUrl;
+        toggleFavoriteRestaurant(favUrl, button);
+    }
 });
+
 
 function toggleFavoriteRestaurant(url, button) {
     fetch(url, {
