@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{% static 'restaurants/css/card.css' %}">
 {% endblock %}
 {% block content %}
+
 <section id="filters">
     <section id="categories_filter">
         {% for category in categories_list %}
@@ -35,74 +36,26 @@
               d="M0,64L80,90.7C160,117,320,171,480,186.7C640,203,800,181,960,165.3C1120,149,1280,139,1360,133.3L1440,128L1440,0L1360,0C1280,0,1120,0,960,0C800,0,640,0,480,0C320,0,160,0,80,0L0,0Z"></path>
     </svg>
 </section>
+
 {% if user.is_authenticated %}
     <div class="container add-restaurant">
         <a href="{% url 'restaurants:restaurant_create' %}"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12.75 9C12.75 8.58579 12.4142 8.25 12 8.25C11.5858 8.25 11.25 8.58579 11.25 9L11.25 11.25H9C8.58579 11.25 8.25 11.5858 8.25 12C8.25 12.4142 8.58579 12.75 9 12.75H11.25V15C11.25 15.4142 11.5858 15.75 12 15.75C12.4142 15.75 12.75 15.4142 12.75 15L12.75 12.75H15C15.4142 12.75 15.75 12.4142 15.75 12C15.75 11.5858 15.4142 11.25 15 11.25H12.75V9Z" fill="#fff"></path> <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1.25C6.06294 1.25 1.25 6.06294 1.25 12C1.25 17.9371 6.06294 22.75 12 22.75C17.9371 22.75 22.75 17.9371 22.75 12C22.75 6.06294 17.9371 1.25 12 1.25ZM2.75 12C2.75 6.89137 6.89137 2.75 12 2.75C17.1086 2.75 21.25 6.89137 21.25 12C21.25 17.1086 17.1086 21.25 12 21.25C6.89137 21.25 2.75 17.1086 2.75 12Z" fill="#fff"></path> </g></svg>
             Add restaurant</a>
     </div>
 {% endif %}
-<section id="restaurants_list" class="container">
-    {% for restaurant in restaurant_list %}
-        <div class="card">
-            {% if user.is_authenticated %}
-                <i
-                    class="favorite fa-heart
-                        {% if restaurant.id in favorite_list %} fa-solid fa-bounce
-                        {% else %} fa-regular {% endif %}"
-                    data-favorite-url="{% url 'restaurants:restaurant_toggle_favorite' restaurant.slug %}"
-                    id="favorite_heart_{{ restaurant.slug }}">
-                </i>
-            {% endif %}
-            <span><img src="{{ restaurant.category.icon.url }}"></span>
-            <div class="card-content">
-                <h3 class="card-title">
-                    <a href="{% url 'restaurants:restaurant_detail' restaurant.slug %}">
-                        {% if restaurant.name|length <= 35 %}
-                        {{ restaurant.name }}
-                        {% else %}
-                        {{ restaurant.name|slice:"0:35" }}...
-                        {% endif %}
-                    </a>
-                </h3>
-                <p class="card-text">
-                    {% if restaurant.description|length <= 150 %}
-                    {{ restaurant.description }}
-                    {% else %}
-                    {{ restaurant.description|slice:"0:150" }}...
-                    {% endif %}
-                </p>
-                <p class="card-rating">{{ restaurant.avg_rating|default:"0" }} <i class="fa-solid fa-star"></i></p>
-                {% if restaurant.owner == user %}
-                <a href="{% url 'restaurants:restaurant_update' restaurant.slug %}">
-                    <svg class="card-edit" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M20.1497 7.93997L8.27971 19.81C7.21971 20.88 4.04971 21.3699 3.27971 20.6599C2.50971 19.9499 3.06969 16.78 4.12969 15.71L15.9997 3.84C16.5478 3.31801 17.2783 3.03097 18.0351 3.04019C18.7919 3.04942 19.5151 3.35418 20.0503 3.88938C20.5855 4.42457 20.8903 5.14781 20.8995 5.90463C20.9088 6.66146 20.6217 7.39189 20.0997 7.93997H20.1497Z"
-                                  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                            <path d="M21 21H12" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-                        </g>
-                    </svg>
-                </a>
-                <a href="{% url 'restaurants:restaurant_delete' restaurant.slug %}">
-                    <svg class="card-delete" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-                        <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                        <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
-                        <g id="SVGRepo_iconCarrier">
-                            <path d="M831.24 280.772c5.657 0 10.24-4.583 10.24-10.24v-83.528c0-5.657-4.583-10.24-10.24-10.24H194.558a10.238 10.238 0 00-10.24 10.24v83.528c0 5.657 4.583 10.24 10.24 10.24H831.24zm0 40.96H194.558c-28.278 0-51.2-22.922-51.2-51.2v-83.528c0-28.278 22.922-51.2 51.2-51.2H831.24c28.278 0 51.2 22.922 51.2 51.2v83.528c0 28.278-22.922 51.2-51.2 51.2z"></path>
-                            <path d="M806.809 304.688l-58.245 666.45c-.544 6.246-6.714 11.9-12.99 11.9H290.226c-6.276 0-12.447-5.654-12.99-11.893L218.99 304.688c-.985-11.268-10.917-19.604-22.185-18.619s-19.604 10.917-18.619 22.185l58.245 666.45c2.385 27.401 26.278 49.294 53.795 49.294h445.348c27.517 0 51.41-21.893 53.796-49.301l58.244-666.443c.985-11.268-7.351-21.201-18.619-22.185s-21.201 7.351-22.185 18.619zM422.02 155.082V51.3c0-5.726 4.601-10.342 10.24-10.342h161.28c5.639 0 10.24 4.617 10.24 10.342v103.782c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48V51.3c0-28.316-22.908-51.302-51.2-51.302H432.26c-28.292 0-51.2 22.987-51.2 51.302v103.782c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48z"></path>
-                            <path d="M496.004 410.821v460.964c0 11.311 9.169 20.48 20.48 20.48s20.48-9.169 20.48-20.48V410.821c0-11.311-9.169-20.48-20.48-20.48s-20.48 9.169-20.48 20.48zm-192.435 1.767l39.936 460.964c.976 11.269 10.903 19.612 22.171 18.636s19.612-10.903 18.636-22.171l-39.936-460.964c-.976-11.269-10.903-19.612-22.171-18.636s-19.612 10.903-18.636 22.171zm377.856-3.535l-39.936 460.964c-.976 11.269 7.367 21.195 18.636 22.171s21.195-7.367 22.171-18.636l39.936-460.964c.976-11.269-7.367-21.195-18.636-22.171s-21.195 7.367-22.171 18.636z"></path>
-                        </g>
-                    </svg>
-                </a>
-                {% endif %}
-            </div>
-            <img class="card-image" src="{{ restaurant.image.url }}" alt="{{ restaurant.name }} image">
-        </div>
-    {% endfor %}
+
+<section id="restaurants_list" class="container"
+         hx-post="{% url 'restaurants:get_restaurants' %}"
+         hx-trigger="load"
+         hx-include="#search_form"
+         hx-swap="innerHTML transition:true">
+    {% include "restaurants/snippet/_restaurant_list.html" %}
 </section>
+
 {% endblock %}
+
 {% block javascripts %}
+    <script src="{% static 'js/htmx.min.js' %}" defer></script>
     {% if user.is_authenticated %}
         <script src="{% static 'restaurants/js/filter.js' %}"></script>
         <script src="{% static 'restaurants/js/restaurant_toggle_favorite.js' %}"></script>
