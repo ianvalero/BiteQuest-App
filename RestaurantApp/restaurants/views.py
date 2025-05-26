@@ -93,10 +93,10 @@ class RestaurantDetailView(DetailView):
             restaurant = get_object_or_404(Restaurant.objects.annotate(avg_rating=Avg('rating__score')), slug=slug)
             user_raiting = None
             favorite = False
+            page_number = request.GET.get('page', 1)
             if request.user.is_authenticated:
                 user_raiting = Rating.objects.filter(restaurant=restaurant, user=request.user).first()
                 favorite = True if Favorite.objects.filter(restaurant=restaurant, user=request.user).first() else False
-                page_number = request.GET.get('page', 1)
             comments = Comment.objects.filter(restaurant=restaurant).order_by('-created_at')
             paginator = Paginator(comments, per_page=5)
             page_object = paginator.get_page(page_number)
